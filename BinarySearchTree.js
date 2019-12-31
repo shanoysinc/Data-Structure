@@ -97,13 +97,41 @@ class BinarySearchTree {
         return data
     }
 
-    // Depth first search  pre order
-    DFSPreOrder() {
+    // Depth first search  post order
+    // traverse over the right side of the root first if there is a value
+    DFSPostOrder() {
         let data = [];
         function traverse(node) {
-            data.push(node.value);
+
             if (node.left) traverse(node.left)
             if (node.right) traverse(node.right)
+            data.push(node.value);
+        }
+        traverse(this.root)
+        return data;
+    }
+
+    sort() {
+        let data = [];
+        function traverse(node) {
+
+            if (node.left) traverse(node.left)
+            data.push(node.value);
+            if (node.right) traverse(node.right)
+
+        }
+        traverse(this.root)
+        return data;
+    }
+
+    reverse() {
+        let data = [];
+        function traverse(node) {
+
+            if (node.right) traverse(node.right)
+            data.push(node.value);
+            if (node.left) traverse(node.left)
+
         }
         traverse(this.root)
         return data;
