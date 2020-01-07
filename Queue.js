@@ -1,46 +1,58 @@
+// queue is FIFO
 class Node {
-    constructor(value) {
-        this.value = value;
-        this.next = null;
+    constructor(val) {
+        this.val = val;
+        this.next = null
     }
 }
+
 
 class Queue {
     constructor() {
         this.first = null;
-        this.last = null
-        this.size = 0
+        this.last = null;
+        this.size = 0;
     }
 
+    //Big O(1)
+    //add node to the end of the last node
     enQueue(val) {
-        let newNode = new Node(val)
-        if (!this.first) {
+        const newNode = new Node(val)
+        if (this.first == null) {
             this.first = newNode;
-            this.last = newNode;
+            this.last = newNode
         } else {
-            this.last.next = newNode;
+            this.last.next = newNode
             this.last = newNode
         }
+
         this.size++
-        return this.size
-
+        return this
     }
+
+    //Big O(1)
+    //removing the node at the begining
     deQueue() {
-
-        if (!this.first) return null;
-
-        let temp = this.first;
-
-        if (this.first == this.last) {
-            this.last = null;
+        if (this.size == 0) {
+            this.last = null
+            return undefined
         }
-        this.first = this.first.next
-        this.size--
-        return temp.value
+        if (this.size >= 0) {
+            this.size -= 1
+            const oldHead = this.first
+            this.first = this.first.next
+
+
+            return oldHead
+        }
     }
 }
 
-let queue = new Queue()
+const queue = new Queue()
+queue.enQueue(1)
+queue.enQueue(2)
+queue.enQueue(3)
+queue.enQueue(4)
 //QUEUE first in first first out(FIFO)
 
 //BIG O of Queue

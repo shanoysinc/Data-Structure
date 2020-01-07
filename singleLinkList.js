@@ -1,141 +1,193 @@
 class Node {
     constructor(val) {
         this.val = val;
-        this.next = null;
+        this.next = null
     }
 }
 
-
-
-class singlyLinkedList {
+class singleLinkList {
     constructor() {
-        this.length = 0;
         this.head = null;
-        this.tail = null;
-    };
+        this.tail = null
+        this.length = 0
+    }
 
     addNode(val) {
-        let newNode = new Node(val)
-        if (!this.head) {
-            this.head = newNode;
-            list.tail = this.head;
+        const newNode = new Node(val)
 
+        if (this.head == null) {
+            this.head = newNode;
+            this.tail = newNode
         } else {
-            list.tail.next = newNode;
-            list.tail = newNode;
+            this.tail.next = newNode;
+            this.tail = newNode
         }
         this.length++
-        return this;
+        return newNode
     }
+
+
     pop() {
-        if (!this.head) return undefined;
-
+        //create a count varible to compare if its equal to lenght -1
+        let count = 0;
         let current = this.head;
-        let newTail = current;
+        //create a while loop that loop through the list
+        while (current) {
+            count++
 
-        while (current.next) {
-            newTail = current
-            current = current.next
+            //if the count is equal to the length -1 you found the last item
+            if (count == this.length) {
+
+                const remove = current
+                this.tail = current
+                current.next = null
+                this.length -= 1
+
+                if (this.length == 1) {
+                    this.head.next = null
+                    this.tail = this.head
+                } else if (this.length == 0) {
+                    this.tail = null
+                    this.head = null
+
+                    return remove
+                }
+                return remove
+            } else {
+                current = current.next
+            }
+
         }
-        this.tail = newTail;
-        this.tail.next = null;
-        this.length--;
-        if (this.length == 0) {
-            this.head = null;
-            this.tail = null;
-        }
-        return current
+
     }
-    shift() {
-        if (!this.head) return undefined;
-        let current = this.head;
-        this.head = current.next
-        this.length--
+    shift(val) {
+        const newNode = new Node(val)
+        if (this.head == null) return this.addNode(val)
+        // save the current head into a variable
+        let currentHead = this.head;
+
+        //save the current head in a variable
+        let currentHeadNextNode = currentHead.next
+
+        // change the head into the newNode
+        this.head = newNode
+
+        //this.head.next = currenthead
+        this.head.next = currentHead
+        //this.head.next.next = nextNode
+        this.head.next.next = currentHeadNextNode
+
+        this.length += 1
+        //this.head = newNode
+        return this
+        //
+
+    }
+
+    unshift() {
+        if (this.head == null) return undefined
+
+        //save the current head next values in a variable
+        let currentHead = this.head
+        let HeadNextNode = this.head.next
+        this.head = HeadNextNode
+        this.length -= 1
         if (this.length == 0) {
             this.tail = null
         }
-        return current;
-    };
-
-    unshift(val) {
-
-        let newNode = new Node(val)
-        if (!this.head) {
-            this.head = newNode
-            this.tail = this.head
-        } else {
-            newNode.next = this.head
-            this.head = newNode
-        }
-        this.length++
-        return this
+        return currentHead
+        //change the head into the current head 
     }
 
     get(index) {
-        if (index < 0 || index >= this.length) return null
-        let counter = 0;
-        let current = this.head;
-        while (counter !== index) {
-            current = current.next;
-            counter++
+        if (this.head == null) return undefined
+        if (index > this.length - 1) return undefined
+        let count = 0;
+        let current = this.head
+        while (count <= index) {
+            if (count == index) return current
+            current = current.next
+            count += 1
         }
-        return current
     }
 
-    set(index, val) {
-        let foundNode = this.get(index)
-        if (foundNode) {
-            foundNode.val = val;
-            return foundNode
-        }
-        return false;
+    set(index, value) {
+        if (index > this.length - 1) return undefined
+        this.get(index).val = value
+        return this.get(index)
     }
 
     insert(index, val) {
-        if (index < 0 || index > this.length) return false;
-        if (index === this.length) return this.addNode(val)
-        if (index === 0) return this.unshift(val)
-        let newNode = new Node(val)
-        let previousNode = this.get(index - 1)
-        let temp = previousNode.next
-        previousNode.next = newNode
-        newNode.next = temp
-        this.length++
-        return true;
-    }
+        if (this.get(index) == undefined) return undefined
 
-    remove(index) {
-        if (index < 0 || index > this.length) return undefined;
-        if (index == this.length - 1) return this.pop()
-        if (index == 0) this.shift();
-        let previousNode = this.get(index - 1)
-        let remove = previousNode.next;
-        previousNode.next = remove.next;
-        this.length--;
-        return remove;
-    }
+        //creating a new node to avoid modifying the original node because of by reference 
+        let recreateNode = new Node(this.get(index).val)
 
-    reverse() {
-        let node = this.head;
-        this.head = this.tail;
-        this.tail = node;
-        let next;
-        let previous = null;
-        for (let i = 0; i < this.length; i++) {
-            next = node.next;
-            node.next = previous;
-            previous = node;
-            node = next
+        let IndxNextNode = this.get(index).next
+
+        this.get(index).val = val
+        this.get(index).next = recreateNode
+        this.get(index).next.next = IndxNextNode
+
+        if (index == this.length - 1) {
+            this.tail = recreateNode
         }
+
+        this.length += 1
+
+        return this
+    }
+
+    //refactor code
+    remove(index) {
+        const currentIndx = this.get(index)
+        if (index > this.length - 1 || index < 0) return undefined
+        if (index == 0 && this.length == 1) {
+            this.tail = null
+            this.length = 0
+        }
+
+        this.length -= 1
+        if (index == 0) {
+            const headNextNode = this.head.next
+            this.head = headNextNode
+            return currentIndx
+        }
+
+        if (index == this.length - 1) {
+            this.tail = this.get(index - 1)
+        }
+        let nextNode = this.get(index).next
+        this.get(index - 1).next = nextNode
+
+        return currentIndx
+    }
+    reverse() {
+        // store the length prop in a variable 
+        let length = this.length - 1
+        let indexInsert = 0
+        //store the pop off value into a variable 
+        let lastIndex = this.pop().val
+        //shift the last index to to the list 
+        this.shift(lastIndex)
+        // while length is greater than zero
+        while (length > 0) {
+            length -= 1
+            //the index where we would start inserting from  which is 1
+            indexInsert += 1
+            lastIndex = this.pop().val
+            // start insert from index one until the while loop ends
+            this.insert(indexInsert, lastIndex)
+        }
+        this.length += 1
+        return this
     }
 }
-let list = new singlyLinkedList()
 
 
-
-
-
-
-
-
-
+const list = new singleLinkList()
+list.addNode(1)
+list.addNode(2)
+list.addNode(3)
+list.addNode(4)
+list.addNode(5)
